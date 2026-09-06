@@ -24,15 +24,26 @@ cp .env.example .env
 # then edit .env and set both ANTHROPIC_API_KEY and RAMI_LEVY_AUTH_TOKEN
 ```
 
-### Getting your Rami Levy auth token
+### Getting your Rami Levy auth tokens & cookies
 
 1. Log into https://www.rami-levy.co.il
 2. Open DevTools (F12) → Network tab
-3. Make any request (e.g., search for a product)
-4. Find the request and look for the `Authorization` header (starts with `Bearer eyJ...`)
-5. Copy the full token value (everything after `Bearer `) and paste it into `.env` as `RAMI_LEVY_AUTH_TOKEN`
+3. Make any request (e.g., search for a product or view cart)
+4. Find the request, inspect the request headers:
+   - **Authorization**: Copy everything after `Bearer ` (e.g., `eyJ...`) → `RAMI_LEVY_AUTH_TOKEN`
+   - **ecomtoken**: If present in headers → `RAMI_LEVY_ECOM_TOKEN`
+   - **Cookie**: Copy the full value → `RAMI_LEVY_COOKIES`
 
-(Token may expire periodically — if `execute_order` fails with "auth failed", refresh your token using the same steps.)
+5. Paste these into `.env`:
+```
+RAMI_LEVY_AUTH_TOKEN=eyJ...
+RAMI_LEVY_ECOM_TOKEN=...
+RAMI_LEVY_COOKIES=...
+```
+
+Only `RAMI_LEVY_AUTH_TOKEN` is required; the other two are optional but recommended for reliability.
+
+(Tokens may expire periodically — if `execute_order` fails with "auth failed", refresh using the same steps.)
 
 ## Usage
 

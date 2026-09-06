@@ -4,5 +4,5 @@ This file is the household grocery database. The agent reads and writes the
 `
 
 ## Items
-- bread x1 (whole wheat)
-- milk x2
+- חלב x1
+- לחם x1

@@ -15,17 +15,30 @@ CHECKOUT_URL = f"{RAMI_LEVY_API_BASE}/he/dashboard/checkout"
 class RamiLevyClient:
     """Interact with Rami Levy's internal web APIs."""
 
-    def __init__(self, auth_token: str | None = None):
+    def __init__(
+        self,
+        auth_token: str | None = None,
+        ecom_token: str | None = None,
+        cookies: str | None = None,
+    ):
         self.auth_token = auth_token or os.environ.get("RAMI_LEVY_AUTH_TOKEN")
+        self.ecom_token = ecom_token or os.environ.get("RAMI_LEVY_ECOM_TOKEN")
+        self.cookies = cookies or os.environ.get("RAMI_LEVY_COOKIES")
+
         if not self.auth_token:
             raise ValueError("RAMI_LEVY_AUTH_TOKEN not set in environment")
+
         self.session = requests.Session()
-        self.session.headers.update(
-            {
-                "Authorization": f"Bearer {self.auth_token}",
-                "Content-Type": "application/json",
-            }
-        )
+        headers = {
+            "Authorization": f"Bearer {self.auth_token}",
+            "Content-Type": "application/json",
+        }
+        if self.ecom_token:
+            headers["ecomtoken"] = self.ecom_token
+        self.session.headers.update(headers)
+
+        if self.cookies:
+            self.session.headers.update({"Cookie": self.cookies})
 
     def search_catalog(self, query: str, store_id: int = DEFAULT_STORE_ID) -> list[dict[str, Any]]:
         """Search for products in the catalog.
