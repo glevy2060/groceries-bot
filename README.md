@@ -59,16 +59,27 @@ you> add 2 milk and a dozen eggs
 agent> Added 2 milk and 12 eggs to the list!
 
 you> execute the order
-agent> 🛒 Found products for your order:
-**חלב** (qty: 2):
-  1. חלב טרי 3% 1L (₪8.99) [ID: 12345]
-  2. חלב טרי 1.5% 1L (₪7.99) [ID: 67890]
-  3. חלב צמחי אגוז קוקוס 1L (₪13.99) [ID: 11111]
-...
-Please confirm by listing the product IDs you want (e.g., "use 12345 for חלב, 67890 for ביצים").
+agent> Here are the top matches:
 
-you> use 12345 for milk and 99999 for eggs
-agent> ✅ Cart created! Complete checkout here: https://www.rami-levy.co.il/he/dashboard/checkout
+**חלב** (qty: 2):
+1. חלב תנובה 3% שומן 2 ל' – ₪14.9 [457691]
+2. חלב נטול לקטוז וויטמין 1ל טרה – ₪9.3 [398234]
+3. חלב מועשר 2 ל 3% יטבתה – ₪16.7 [31680]
+
+**לחם** (qty: 1):
+1. לחם אחיד פרוס 900 ג רמי לוי – ₪8.3 [397356]
+2. לחם כוסמין קל 600 גר – ₪16.1 [404583]
+3. לחם אחיד פרוס אנג'ל – ₪8.3 [397353]
+
+Which product IDs would you like to use for each?
+
+you> use 457691 for חלב and 397356 for לחם
+agent> Your order is ready! 🛒
+
+- 2x חלב תנובה 3% (₪14.9 each)
+- 1x לחם אחיד פרוס רמי לוי (₪8.3)
+
+Complete your purchase here: https://www.rami-levy.co.il/he/dashboard/checkout
 ```
 
 **REST API:**
