@@ -211,20 +211,23 @@ def dispatch_tool_call(grocery_database: GroceryDatabase, tool_name: str, tool_i
             return f"❌ Invalid selection format. Expected JSON, got: {selections_json}"
 
         items = grocery_database.list_items()
-        cart_items = []
+        order_summary: list[str] = []
 
         for item in items:
             if item.name not in selections:
                 return f"❌ Missing selection for '{item.name}'. Please provide all product IDs."
             product_id = selections[item.name]
-            cart_items.append({"product_id": product_id, "quantity": item.quantity})
+            order_summary.append(f"  - {item.name}: {item.quantity}x (ID: {product_id})")
 
         try:
             rami_levy = RamiLevyClient()
-            rami_levy.create_cart(cart_items)
             checkout_url = rami_levy.get_checkout_url()
-            return f"✅ Cart created! Complete checkout here: {checkout_url}"
+            summary = "\n".join(order_summary)
+            return (
+                f"✅ Order ready! Here's your cart summary:\n{summary}\n\n"
+                f"Go to Rami Levy and add these items to your cart:\n{checkout_url}"
+            )
         except Exception as e:
-            return f"❌ Failed to create cart: {e}"
+            return f"❌ Failed to prepare checkout: {e}"
 
     raise ValueError(f"Unknown tool: {tool_name}")
