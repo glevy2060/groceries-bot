@@ -5,11 +5,12 @@ grocery list up to date, then ask it to execute the order.
 
 ## Roadmap
 
-- **Phase 1 (this)** — naive markdown-file database, a Claude-powered agent that
+- **Phase 1 ✅** — naive markdown-file database, a Claude-powered agent that
   understands natural-language messages via tool use, exposed both as a REST API
   and a local CLI chat.
-- **Phase 2** — `execute_order` creates a real cart on Rami Levy (using your
-  saved credentials) and returns a checkout link instead of the current stub.
+- **Phase 2 ✅** — `execute_order` creates a real cart on Rami Levy (using your
+  saved credentials) and returns a checkout link. Two-step flow: search catalog
+  for products, show top matches, user confirms selections, cart created.
 - **Phase 3** — wire the agent into a shared WhatsApp group so you and your
   husband message it directly.
 
@@ -20,8 +21,18 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-# then edit .env and set ANTHROPIC_API_KEY
+# then edit .env and set both ANTHROPIC_API_KEY and RAMI_LEVY_AUTH_TOKEN
 ```
+
+### Getting your Rami Levy auth token
+
+1. Log into https://www.rami-levy.co.il
+2. Open DevTools (F12) → Network tab
+3. Make any request (e.g., search for a product)
+4. Find the request and look for the `Authorization` header (starts with `Bearer eyJ...`)
+5. Copy the full token value (everything after `Bearer `) and paste it into `.env` as `RAMI_LEVY_AUTH_TOKEN`
+
+(Token may expire periodically — if `execute_order` fails with "auth failed", refresh your token using the same steps.)
 
 ## Usage
 
@@ -31,13 +42,31 @@ cp .env.example .env
 python -m app.cli
 ```
 
+Example conversation:
+```
+you> add 2 milk and a dozen eggs
+agent> Added 2 milk and 12 eggs to the list!
+
+you> execute the order
+agent> 🛒 Found products for your order:
+**חלב** (qty: 2):
+  1. חלב טרי 3% 1L (₪8.99) [ID: 12345]
+  2. חלב טרי 1.5% 1L (₪7.99) [ID: 67890]
+  3. חלב צמחי אגוז קוקוס 1L (₪13.99) [ID: 11111]
+...
+Please confirm by listing the product IDs you want (e.g., "use 12345 for חלב, 67890 for ביצים").
+
+you> use 12345 for milk and 99999 for eggs
+agent> ✅ Cart created! Complete checkout here: https://www.rami-levy.co.il/he/dashboard/checkout
+```
+
 **REST API:**
 
 ```bash
 uvicorn app.api:app --reload
 ```
 
-- `POST /chat` — `{"message": "add 2 milk and a bag of bread"}` → `{"reply": "..."}`
+- `POST /chat` — `{"message": "add 2 milk", "session_identifier": "household"}` → `{"reply": "..."}`
 - `GET /items` — current grocery list as JSON
 
 Both entry points share the same agent and read/write `data/groceries.md`,
