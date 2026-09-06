@@ -11,8 +11,8 @@ grocery list up to date, then ask it to execute the order.
 - **Phase 2 ✅** — `execute_order` creates a real cart on Rami Levy (using your
   saved credentials) and returns a checkout link. Two-step flow: search catalog
   for products, show top matches, user confirms selections, cart created.
-- **Phase 3** — wire the agent into a shared WhatsApp group so you and your
-  husband message it directly.
+- **Phase 3 ✅** — wire the agent into a shared WhatsApp group ("קניות") so you and your
+  husband message it directly. Hybrid Node.js (WhatsApp Web) + Python (agent logic).
 
 ## Setup
 
@@ -93,6 +93,27 @@ uvicorn app.api:app --reload
 
 Both entry points share the same agent and read/write `data/groceries.md`,
 which you can also open and edit directly since it's just a markdown file.
+
+**WhatsApp (full household integration):**
+
+Run both services in separate terminals:
+
+Terminal 1 (Python API):
+```bash
+uvicorn app.api:app --host 0.0.0.0 --port 8000
+```
+
+Terminal 2 (WhatsApp listener):
+```bash
+cd services/whatsapp-listener
+npm install  # first time only
+cp .env.example .env  # first time only
+npm start
+```
+
+On first run, scan the QR code with WhatsApp. Then message the "קניות" group, and the
+bot will listen and respond automatically. All messages are processed by the Python
+agent, so it works exactly like the CLI but in your WhatsApp group.
 
 ## Tests
 

@@ -27,6 +27,18 @@ class ChatResponse(BaseModel):
     reply: str
 
 
+class WhatsAppMessageRequest(BaseModel):
+    text: str
+    sender: str
+    sender_id: str
+    group_name: str
+    group_id: str
+
+
+class WhatsAppMessageResponse(BaseModel):
+    reply: str
+
+
 @app.post("/chat", response_model=ChatResponse)
 def chat(chat_request: ChatRequest) -> ChatResponse:
     history = conversation_histories.get(chat_request.session_identifier, [])
@@ -41,3 +53,12 @@ def get_items() -> list[dict[str, Any]]:
         {"name": item.name, "quantity": item.quantity, "note": item.note}
         for item in grocery_agent.grocery_database.list_items()
     ]
+
+
+@app.post("/whatsapp/message", response_model=WhatsAppMessageResponse)
+def whatsapp_message(request: WhatsAppMessageRequest) -> WhatsAppMessageResponse:
+    session_id = f"whatsapp_{request.group_id}"
+    history = conversation_histories.get(session_id, [])
+    reply_text, updated_history = grocery_agent.respond(request.text, history)
+    conversation_histories[session_id] = updated_history
+    return WhatsAppMessageResponse(reply=reply_text)

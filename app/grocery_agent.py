@@ -15,7 +15,7 @@ DEFAULT_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5")
 DATA_FILE_PATH = Path(__file__).resolve().parent.parent / "data" / "groceries.md"
 
 SYSTEM_PROMPT = """You are the grocery assistant for a household shared between two \
-spouses. They will message you (eventually from a shared WhatsApp group) to add, \
+spouses. They message you from a shared WhatsApp group ("קניות") to add, \
 remove, or check items on their grocery list, and to ask you to execute the order \
 at Rami Levy.
 

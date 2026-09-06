@@ -1,0 +1,16 @@
+{
+  "name": "groceries-whatsapp-listener",
+  "version": "1.0.0",
+  "description": "WhatsApp listener service for groceries bot",
+  "main": "listener.js",
+  "type": "module",
+  "scripts": {
+    "start": "node listener.js",
+    "dev": "node --watch listener.js"
+  },
+  "dependencies": {
+    "whatsapp-web.js": "^1.25.0",
+    "dotenv": "^16.0.0",
+    "axios": "^1.6.0"
+  }
+}

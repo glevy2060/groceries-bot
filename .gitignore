@@ -4,3 +4,8 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+
+# WhatsApp listener
+services/whatsapp-listener/node_modules/
+services/whatsapp-listener/.wppconnect/
+services/whatsapp-listener/.env
