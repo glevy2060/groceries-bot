@@ -138,8 +138,8 @@ def _execute_order_search(grocery_database: GroceryDatabase) -> str:
                     {
                         "id": p.get("id"),
                         "name": p.get("name", "Unknown"),
-                        "price": p.get("price", "N/A"),
-                        "brand": p.get("manufacturer", ""),
+                        "price": p.get("price", {}).get("price", "N/A"),
+                        "brand": p.get("gs", {}).get("BrandName", ""),
                     }
                     for p in top_matches
                 ],

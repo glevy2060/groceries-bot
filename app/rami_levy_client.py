@@ -56,7 +56,7 @@ class RamiLevyClient:
         )
         response.raise_for_status()
         data = response.json()
-        products = data.get("results", [])
+        products = data.get("data", [])
         return products
 
     def create_cart(self, items: list[dict[str, int]]) -> dict[str, Any]:
